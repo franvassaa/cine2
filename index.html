@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="utf-8">
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <title>Rio Cinemas</title>
 </head>
-
 <body>
     <div class="cabecera">
         <div class="anchocabecera">
@@ -14,161 +12,57 @@
                 <img class="logo" src="/img/logo.png">
             </div>
             <div class="buscador">
-                <select>
+                <select id="cinemaSelect">
                     <option>Selecciona tu cine</option>
                     <option>Caballito (Av. La Plata)</option>
                     <option>Abasto (Av Corrientes)</option>
                     <option>Alto Avellaneda (Av Gral. Guemes)</option>
                 </select>
-                <input type="button" value="Ver cartelera" onclick="before">
+                <input type="button" value="Ver cartelera" onclick="getCinemaInfo()">
             </div>
             <div class="contacto">
                 <input type="button" value="Contacto">
             </div>
         </div>
     </div>
-    <nav class="navegador">
-        <div class="anchonavegador">
-            <ul>
-                <li>
-                    <a href="">Inicio</a>
-                </li>
-                <li>
-                    <a href="">Cartelera</a>
-                </li>
-                <li>
-                    <a href="">Estrenos</a>
-                </li>
-                <li>
-                    <a href="">Próximos estrenos</a>
-                </li>
-                <li>
-                    <a href="">Eventos/Fiestas</a>
-                </li>
-                <li>
-                    <a href="">Galería</a>
-                </li>
-            </ul>
-            <ul>
 
-            </ul>
-        </div>
-    </nav>
-    <div class="imagen-slider">
-        <div id="banners">
-            <img class="imagenes-banners" src="img/banners/angrybirds.png">
-
-
-        </div>
-        <div class="botonesSigAnt">
-            <button class="b-anterior" onclick="beforeImage()">-</button>
-            <button class="b-siguiente" onclick="nextImage()">+</button>
-        </div>
-        <script>
-            var slider_content = document.getElementById('banners');
-
-            var image = ["angrybirds", "comosifueralaprimeravez", "habiaunavezenhollywood", "historiasmiedo", "it", "angrybirds"];
-
-            var i = image.length;
-
-            function nextImage() {
-                if (i < image.length) {
-                    i = i + 1;
-                    if (i == image.length) {
-                        i = 1;
-                    }
-                } else {
-                    i = 1;
-                }
-                slider_content.innerHTML = "<img class=\"imagenes-banners\" src=\"img/banners/" + image[i] + ".png\">";
-            }
-
-            function beforeImage() {
-                if (i < image.length + 1 && i > 1) {
-                    i = i - 1;
-                } else {
-                    i = image.length;
-                }
-                slider_content.innerHTML = "<img class=\"imagenes-banners\" src=img/banners/" + image[i - 1] + ".png>";
-            }
-        </script>
-    </div>
-
-
-    <div class="peliculas">
-        <h2>Películas</h2>
-        <div class="listapeliculas">
-            <div class="pelicula-info">
-                <img src="img/peliculas/venom.jpg">
-                <p>Venom: El Último Baile </p>
-                <p>Duración: 110 min </p>
-                <p>Genero: Accion </p>
-            </div>
-            <div class="pelicula-info">
-                <img src="img/peliculas/laSustancia.jpg">
-                <p>La Sustancia</p>
-                <p>Duración: 140 min </p>
-                <p>Genero: Drama</p>
-            </div>
-            <div class="pelicula-info">
-                <img src="img/peliculas/elTiempoQueTenemos.jpg">
-                <p>El tiempo que nos queda</p>
-                <p>Duración: 107 min</p>
-                <p>Genero: Drama </p>
-            </div>
-            <div class="pelicula-info">
-                <img src="img/peliculas/elJockey.jpg">
-                <p>El Jockey </p>
-                <p>Duración: 96 min</p>
-                <p>Genero: Drama </p>
-            </div>
-            <div class="pelicula-info">
-                <img src="img/peliculas/trajeRojo.jpg">
-                <p>Codigo traje Rojo </p>
-                <p>Duración: 124 min</p>
-                <p>Genero: Accion </p>
-            </div>
-            <div class="pelicula-info">
-                <img src="img/peliculas/terrifier.jpg">
-                <p>Terrifier 3 </p>
-                <p>Duración: 125 min</p>
-                <p>Genero: Terror </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="pie">
-        <div class="pie-padre">
-            <div class="pie-izquierda">
-                <h2>Rio Cinemas</h2>
-                <p>Proyecto desarrollado por André Ibarra Pérez</p>
-            </div>
-            <div class="pie-centro">
-
-            </div>
-            <div class="pie-derecha">
-                <h3>Siguenos</h3>
-                <ul>
-                    <li>
-                        <a href=""><img src="img/icons/Facebook_16px.png"> Facebook</a>
-                    </li>
-                    <li>
-                        <a href=""><img src="img/icons/Instagram_16px.png"> Instagram</a>
-                    </li>
-                    <li>
-                        <a href=""><img src="img/icons/Twitter_16px.png"> Twitter</a>
-                    </li>
-                </ul>
-
-
-
-            </div>
-        </div>
-
-    </div>
+    <!-- Script para manejar la lógica -->
     <script>
-        setInterval('nextImage()', 3000);
-    </script>
-</body>
+        // Función para enviar la solicitud al backend
+        function getCinemaInfo() {
+            // Obtener el cine seleccionado
+            const selectedCinema = document.getElementById('cinemaSelect').value;
 
+            // Si no se seleccionó un cine válido, mostrar un mensaje
+            if (selectedCinema === "Selecciona tu cine") {
+                alert("Por favor, selecciona un cine.");
+                return;
+            }
+
+            // Realizar una solicitud POST a Flask
+            fetch('/select_cinema', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cinema: selectedCinema
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);  // Mostrar el mensaje recibido
+                    if (data.data) {
+                        console.log(data.data);  // Mostrar los detalles del cine en la consola (puedes hacer lo que quieras con estos datos)
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+
+</body>
 </html>
