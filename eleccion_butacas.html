@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elección de Butacas</title>
+</head>
+<body>
+    <h1>Elección de Butacas</h1>
+
+    <div class="informacion-pelicula">
+        <h2 id="titulo-pelicula"></h2>
+        <p id="duracion"></p>
+        <p id="genero"></p>
+        <p id="descripcion"></p>
+    </div>
+
+    <h3>Selecciona tus butacas:</h3>
+    <div class="butacas">
+        <!-- Aquí irían los botones o gráficos de los asientos -->
+        <button>Butaca 1</button>
+        <button>Butaca 2</button>
+        <button>Butaca 3</button>
+        <!-- Puedes agregar más botones según el número de asientos -->
+    </div>
+
+    <h3>Precios:</h3>
+    <p>Precio por asiento: $500</p>
+
+    <script>
+        // Obtener el parámetro "movie" de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const movie = urlParams.get('movie');
+
+        // Cambiar la información de la película según el parámetro
+        let titulo = '';
+        let duracion = '';
+        let genero = '';
+        let descripcion = '';
+
+        // Aquí puedes ajustar el contenido para cada película
+        switch(movie) {
+            case 'venom':
+                titulo = 'Venom: El Último Baile';
+                duracion = '110 minutos';
+                genero = 'Acción';
+                descripcion = 'El último enfrentamiento de Venom en la ciudad.';
+                break;
+            case 'lasustancia':
+                titulo = 'La Sustancia';
+                duracion = '140 minutos';
+                genero = 'Drama';
+                descripcion = 'Un drama psicológico sobre la búsqueda de la verdad.';
+                break;
+            case 'eltimequequeda':
+                titulo = 'El Tiempo Que Nos Queda';
+                duracion = '107 minutos';
+                genero = 'Drama';
+                descripcion = 'Una reflexión sobre el tiempo y las decisiones que tomamos.';
+                break;
+            case 'eljockey':
+                titulo = 'El Jockey';
+                duracion = '96 minutos';
+                genero = 'Drama';
+                descripcion = 'La historia de un jockey en busca de su último gran triunfo.';
+                break;
+            case 'trajerojo':
+                titulo = 'Código Traje Rojo';
+                duracion = '124 minutos';
+                genero = 'Acción';
+                descripcion = 'Un thriller de acción lleno de giros inesperados.';
+                break;
+            case 'terrifier':
+                titulo = 'Terrifier 3';
+                duracion = '125 minutos';
+                genero = 'Terror';
+                descripcion = 'La tercera entrega de la aterradora saga de terror.';
+                break;
+            default:
+                titulo = 'Película no encontrada';
+                duracion = '';
+                genero = '';
+                descripcion = '';
+                break;
+        }
+
+        // Actualizar el DOM con la información de la película
+        document.getElementById('titulo-pelicula').innerText = titulo;
+        document.getElementById('duracion').innerText = `Duración: ${duracion}`;
+        document.getElementById('genero').innerText = `Género: ${genero}`;
+        document.getElementById('descripcion').innerText = descripcion;
+    </script>
+</body>
+</html>
