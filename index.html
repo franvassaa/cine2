@@ -1,75 +1,53 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <title>Rio Cinemas</title>
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
-</head>
-<body>
-    <div class="header">
-        <h1>Bienvenido a Rio Cinemas</h1>
-        <div class="search">
-            <select id="cinema-select">
-                <option>Selecciona tu cine</option>
-                <option>Caballito (Av. La Plata)</option>
-                <option>Abasto (Av Corrientes)</option>
-                <option>Alto Avellaneda (Av Gral. Guemes)</option>
-            </select>
-            <button onclick="getCartelera()">Ver cartelera</button>
+<div class="peliculas">
+    <h2>Películas</h2>
+    <div class="listapeliculas">
+        <div class="pelicula-info">
+            <a href="eleccion_butacas.html?movie=venom">
+                <img src="img/peliculas/venom.jpg">
+            </a>
+            <p>Venom: El Último Baile </p>
+            <p>Duración: 110 min </p>
+            <p>Género: Acción </p>
+        </div>
+        <div class="pelicula-info">
+            <a href="eleccion_butacas.html?movie=lasustancia">
+                <img src="img/peliculas/laSustancia.jpg">
+            </a>
+            <p>La Sustancia</p>
+            <p>Duración: 140 min </p>
+            <p>Género: Drama</p>
+        </div>
+        <div class="pelicula-info">
+            <a href="eleccion_butacas.html?movie=eltimequequeda">
+                <img src="img/peliculas/elTiempoQueTenemos.jpg">
+            </a>
+            <p>El tiempo que nos queda</p>
+            <p>Duración: 107 min</p>
+            <p>Género: Drama </p>
+        </div>
+        <div class="pelicula-info">
+            <a href="eleccion_butacas.html?movie=eljockey">
+                <img src="img/peliculas/elJockey.jpg">
+            </a>
+            <p>El Jockey </p>
+            <p>Duración: 96 min</p>
+            <p>Género: Drama </p>
+        </div>
+        <div class="pelicula-info">
+            <a href="eleccion_butacas.html?movie=trajerojo">
+                <img src="img/peliculas/trajeRojo.jpg">
+            </a>
+            <p>Código Traje Rojo </p>
+            <p>Duración: 124 min</p>
+            <p>Género: Acción </p>
+        </div>
+        <div class="pelicula-info">
+            <a href="eleccion_butacas.html?movie=terrifier">
+                <img src="img/peliculas/terrifier.jpg">
+            </a>
+            <p>Terrifier 3 </p>
+            <p>Duración: 125 min</p>
+            <p>Género: Terror </p>
         </div>
     </div>
-
-    <div id="cartelera">
-        <h2>Películas en Cartelera</h2>
-        <div id="movies-list"></div>
-    </div>
-
-    <script>
-        // Función para obtener la cartelera de películas
-        function getCartelera() {
-            const cinema = document.getElementById('cinema-select').value;
-            
-            if (cinema === 'Selecciona tu cine') {
-                alert('Por favor selecciona un cine.');
-                return;
-            }
-
-            fetch('/select_cinema', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ cinema: cinema })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message.includes('Seleccionaste el cine')) {
-                    getMovies();
-                } else {
-                    alert('Cine no encontrado');
-                }
-            });
-        }
-
-        // Función para obtener las películas desde la base de datos
-        function getMovies() {
-            fetch('/get_movies')
-            .then(response => response.json())
-            .then(movies => {
-                let moviesHtml = '';
-                movies.forEach(movie => {
-                    moviesHtml += `
-                        <div class="movie">
-                            <img src="img/peliculas/${movie.titulo}.jpg" alt="${movie.titulo}">
-                            <p>${movie.titulo}</p>
-                            <p>Género: ${movie.genero}</p>
-                            <p>Duración: ${movie.duracion} min</p>
-                        </div>
-                    `;
-                });
-                document.getElementById('movies-list').innerHTML = moviesHtml;
-            });
-        }
-    </script>
-</body>
-</html>
+</div>
