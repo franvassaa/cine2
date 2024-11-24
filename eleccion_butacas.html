@@ -122,6 +122,34 @@
             background-color: #1e8449;
         }
 
+        /* Formulario de datos de tarjeta */
+        #formulario-tarjeta {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #formulario-tarjeta input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        #formulario-tarjeta button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        #formulario-tarjeta button:hover {
+            background-color: #2980b9;
+        }
+
         /* Sección de resumen de compra */
         #resumen-compra {
             display: none;
@@ -181,6 +209,15 @@
         <button id="confirmar-metodo">Confirmar método de pago</button>
     </div>
 
+    <!-- Formulario de tarjeta de crédito -->
+    <div id="formulario-tarjeta">
+        <h3>Ingresa los datos de tu tarjeta:</h3>
+        <input type="text" id="numero-tarjeta" placeholder="Número de tarjeta" maxlength="16" required>
+        <input type="text" id="fecha-vencimiento" placeholder="Fecha de vencimiento (MM/AA)" maxlength="5" required>
+        <input type="text" id="cvv" placeholder="Código de seguridad (CVV)" maxlength="3" required>
+        <button id="confirmar-pago">Confirmar pago</button>
+    </div>
+
     <!-- Resumen de la compra -->
     <div id="resumen-compra">
         <h3>Resumen de tu compra:</h3>
@@ -202,50 +239,44 @@
         const confirmarButacasBtn = document.getElementById('confirmar-butacas');
         const metodoPagoSelect = document.getElementById('metodo-pago');
         const confirmarMetodoBtn = document.getElementById('confirmar-metodo');
+        const formularioTarjeta = document.getElementById('formulario-tarjeta');
+        const confirmarPagoBtn = document.getElementById('confirmar-pago');
         const resumenCompra = document.getElementById('resumen-compra');
         const resumenTituloPelicula = document.getElementById('resumen-titulo-pelicula');
         const resumenTipoEntrada = document.getElementById('resumen-tipo-entrada');
         const resumenCantidadButacas = document.getElementById('resumen-cantidad-butacas');
         const resumenButacas = document.getElementById('resumen-butacas');
         const resumenMetodoPago = document.getElementById('resumen-metodo-pago');
-
-        let seleccionadas = [];
+        const resumenMetodoPago = document.getElementById('resumen-metodo-pago');
         let tipoEntrada = '';
-        let metodoPago = '';
+        let seleccionadas = [];
 
         tipoEntradaSelect.addEventListener('change', () => {
-            if (tipoEntradaSelect.value) {
-                tipoEntrada = tipoEntradaSelect.value;
-                seccionCantidadButacas.style.display = 'block';
-            }
+            tipoEntrada = tipoEntradaSelect.value;
+            seccionCantidadButacas.style.display = 'block';
         });
 
         confirmarCantidadBtn.addEventListener('click', () => {
-            const cantidad = parseInt(cantidadButacasInput.value, 10);
-
-            if (!cantidad || cantidad < 1 || cantidad > 10) {
-                alert('Por favor, selecciona una cantidad válida (1-10).');
-                return;
+            let cantidadButacas = parseInt(cantidadButacasInput.value);
+            if (cantidadButacas > 0 && cantidadButacas <= 10) {
+                contenedorButacas.innerHTML = ''; // Limpiar butacas existentes
+                for (let i = 1; i <= cantidadButacas; i++) {
+                    const boton = document.createElement('button');
+                    boton.classList.add('butaca');
+                    boton.textContent = `Butaca ${i}`;
+                    boton.addEventListener('click', () => {
+                        boton.classList.toggle('selected');
+                        if (boton.classList.contains('selected')) {
+                            seleccionadas.push(boton.textContent);
+                        } else {
+                            seleccionadas = seleccionadas.filter(b => b !== boton.textContent);
+                        }
+                        confirmarButacasBtn.style.display = seleccionadas.length > 0 ? 'block' : 'none';
+                    });
+                    contenedorButacas.appendChild(boton);
+                }
+                seccionButacas.style.display = 'block';
             }
-
-            contenedorButacas.innerHTML = ''; // Limpiar contenido previo
-            for (let i = 1; i <= cantidad; i++) {
-                const boton = document.createElement('div');
-                boton.classList.add('butaca');
-                boton.textContent = `Butaca ${i}`;
-                boton.addEventListener('click', () => {
-                    boton.classList.toggle('selected');
-                    if (boton.classList.contains('selected')) {
-                        seleccionadas.push(boton.textContent);
-                    } else {
-                        seleccionadas = seleccionadas.filter(b => b !== boton.textContent);
-                    }
-                    confirmarButacasBtn.style.display = seleccionadas.length > 0 ? 'block' : 'none';
-                });
-                contenedorButacas.appendChild(boton);
-            }
-
-            seccionButacas.style.display = 'block';
         });
 
         confirmarButacasBtn.addEventListener('click', () => {
@@ -253,13 +284,25 @@
         });
 
         confirmarMetodoBtn.addEventListener('click', () => {
-            metodoPago = metodoPagoSelect.value;
-            resumenCompra.style.display = 'block';
-            resumenTituloPelicula.textContent = 'Venom 2'; // Ejemplo
-            resumenTipoEntrada.textContent = tipoEntrada;
-            resumenCantidadButacas.textContent = seleccionadas.length;
-            resumenButacas.textContent = seleccionadas.join(', ');
-            resumenMetodoPago.textContent = metodoPago;
+            formularioTarjeta.style.display = 'block';
+            seccionMetodoPago.style.display = 'none';
+        });
+
+        confirmarPagoBtn.addEventListener('click', () => {
+            const numeroTarjeta = document.getElementById('numero-tarjeta').value;
+            const fechaVencimiento = document.getElementById('fecha-vencimiento').value;
+            const cvv = document.getElementById('cvv').value;
+
+            if (numeroTarjeta && fechaVencimiento && cvv) {
+                resumenCompra.style.display = 'block';
+                resumenTituloPelicula.textContent = 'Venom 2'; // Ejemplo
+                resumenTipoEntrada.textContent = tipoEntrada;
+                resumenCantidadButacas.textContent = seleccionadas.length;
+                resumenButacas.textContent = seleccionadas.join(', ');
+                resumenMetodoPago.textContent = metodoPagoSelect.value;
+            } else {
+                alert('Por favor, complete los campos de la tarjeta.');
+            }
         });
     </script>
 </body>
