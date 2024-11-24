@@ -17,6 +17,88 @@
         h1, h3 {
             color: #2e3b4e;
         }
+
+        /* Contenedor de las butacas */
+        .butacas {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr); /* 10 butacas por fila */
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .butaca {
+            background-color: #7f8c8d;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .butaca:hover {
+            background-color: #95a5a6;
+            transform: scale(1.1);
+        }
+
+        .butaca.selected {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .butaca.selected:hover {
+            background-color: #2980b9;
+        }
+
+        .butaca.occupied {
+            background-color: #e74c3c;
+            cursor: not-allowed;
+        }
+
+        /* Formulario de cantidad de butacas */
+        #seccion-cantidad-butacas input {
+            padding: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+            width: 50px;
+        }
+
+        #seccion-cantidad-butacas button {
+            padding: 5px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #seccion-cantidad-butacas button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Sección de método de pago */
+        #seccion-metodo-pago {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #seccion-metodo-pago select, #seccion-metodo-pago button {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        #seccion-metodo-pago button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #seccion-metodo-pago button:hover {
+            background-color: #1e8449;
+        }
     </style>
 </head>
 <body>
@@ -56,7 +138,7 @@
     </div>
 
     <!-- Selección de método de pago -->
-    <div id="seccion-metodo-pago" style="display: none;">
+    <div id="seccion-metodo-pago">
         <h3>Selecciona tu método de pago:</h3>
         <select id="metodo-pago">
             <option value="" disabled selected>Selecciona un método</option>
@@ -67,37 +149,20 @@
         <button id="confirmar-metodo">Confirmar método de pago</button>
     </div>
 
-    <!-- Formulario de datos de tarjeta -->
-    <div id="seccion-datos-tarjeta" style="display: none;">
-        <h3>Introduce los datos de tu tarjeta:</h3>
-        <input type="text" id="nombre-titular" placeholder="Nombre del titular">
-        <input type="text" id="numero-tarjeta" placeholder="Número de tarjeta (16 dígitos)">
-        <input type="text" id="fecha-expiracion" placeholder="Fecha de expiración (MM/AA)">
-        <input type="text" id="codigo-seguridad" placeholder="Código de seguridad (CVV)">
-        <button id="confirmar-pago">Confirmar pago</button>
-    </div>
-
     <script>
         const tipoEntradaSelect = document.getElementById('tipo-entrada');
         const seccionCantidadButacas = document.getElementById('seccion-cantidad-butacas');
         const seccionButacas = document.getElementById('seccion-butacas');
         const seccionMetodoPago = document.getElementById('seccion-metodo-pago');
-        const seccionDatosTarjeta = document.getElementById('seccion-datos-tarjeta');
         const cantidadButacasInput = document.getElementById('cantidad-butacas');
         const confirmarCantidadBtn = document.getElementById('confirmar-cantidad');
         const contenedorButacas = document.getElementById('contenedor-butacas');
         const confirmarButacasBtn = document.getElementById('confirmar-butacas');
         const metodoPagoSelect = document.getElementById('metodo-pago');
         const confirmarMetodoBtn = document.getElementById('confirmar-metodo');
-        const confirmarPagoBtn = document.getElementById('confirmar-pago');
-
-        let seleccionadas = [];
-        let tipoEntrada = '';
-        let metodoPago = '';
 
         tipoEntradaSelect.addEventListener('change', () => {
-            tipoEntrada = tipoEntradaSelect.value;
-            if (tipoEntrada) {
+            if (tipoEntradaSelect.value) {
                 seccionCantidadButacas.style.display = 'block';
             }
         });
@@ -124,43 +189,24 @@
         });
 
         confirmarButacasBtn.addEventListener('click', () => {
-            seleccionadas = Array.from(document.querySelectorAll('.butaca.selected')).map(butaca => butaca.textContent);
+            const seleccionadas = document.querySelectorAll('.butaca.selected').length;
+            const cantidad = parseInt(cantidadButacasInput.value, 10);
 
-            if (seleccionadas.length === parseInt(cantidadButacasInput.value, 10)) {
+            if (seleccionadas === cantidad) {
                 seccionMetodoPago.style.display = 'block';
                 alert('Seleccionaste todas las butacas requeridas.');
             } else {
-                alert(`Selecciona ${cantidadButacasInput.value} butaca(s).`);
+                alert(`Selecciona ${cantidad} butaca(s).`);
             }
         });
 
         confirmarMetodoBtn.addEventListener('click', () => {
-            metodoPago = metodoPagoSelect.value;
+            const metodo = metodoPagoSelect.value;
 
-            if (metodoPago) {
-                seccionDatosTarjeta.style.display = 'block';
+            if (metodo) {
+                alert(`Método de pago confirmado: ${metodo.toUpperCase()}.`);
             } else {
                 alert('Selecciona un método de pago.');
-            }
-        });
-
-        confirmarPagoBtn.addEventListener('click', () => {
-            const nombre = document.getElementById('nombre-titular').value;
-            const numero = document.getElementById('numero-tarjeta').value;
-            const fecha = document.getElementById('fecha-expiracion').value;
-            const cvv = document.getElementById('codigo-seguridad').value;
-
-            if (nombre && numero && fecha && cvv) {
-                const datosCompra = {
-                    tipoEntrada,
-                    seleccionadas,
-                    metodoPago
-                };
-
-                const queryString = new URLSearchParams(datosCompra).toString();
-                window.location.href = `confirmacion_compra.html?${queryString}`;
-            } else {
-                alert('Por favor, completa todos los campos de la tarjeta.');
             }
         });
     </script>
