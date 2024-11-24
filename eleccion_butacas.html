@@ -91,6 +91,15 @@
         <p id="descripcion"></p>
     </div>
 
+    <!-- Selección de película -->
+    <h3>Selecciona una película:</h3>
+    <select id="seleccion-pelicula">
+        <option value="" disabled selected>Selecciona una película</option>
+        <option value="1">Película 1</option>
+        <option value="2">Película 2</option>
+        <option value="3">Película 3</option>
+    </select>
+
     <!-- Selección de tipo de entrada -->
     <h3>Selecciona el tipo de entrada:</h3>
     <div class="seleccion-entrada">
@@ -140,6 +149,7 @@
 
     <script>
         const tipoEntradaSelect = document.getElementById('tipo-entrada');
+        const seleccionPeliculaSelect = document.getElementById('seleccion-pelicula');
         const seccionCantidadButacas = document.getElementById('seccion-cantidad-butacas');
         const seccionButacas = document.getElementById('seccion-butacas');
         const seccionMetodoPago = document.getElementById('seccion-metodo-pago');
@@ -152,6 +162,23 @@
         const confirmarMetodoBtn = document.getElementById('confirmar-metodo');
         const confirmarPagoBtn = document.getElementById('confirmar-pago');
 
+        const peliculas = {
+            1: {titulo: "Película 1", duracion: "120 minutos", genero: "Acción", descripcion: "Descripción de la película 1."},
+            2: {titulo: "Película 2", duracion: "90 minutos", genero: "Comedia", descripcion: "Descripción de la película 2."},
+            3: {titulo: "Película 3", duracion: "150 minutos", genero: "Drama", descripcion: "Descripción de la película 3."},
+        };
+
+        seleccionPeliculaSelect.addEventListener('change', () => {
+            const peliculaSeleccionada = seleccionPeliculaSelect.value;
+            const pelicula = peliculas[peliculaSeleccionada];
+            document.getElementById('titulo-pelicula').textContent = pelicula.titulo;
+            document.getElementById('duracion').textContent = pelicula.duracion;
+            document.getElementById('genero').textContent = pelicula.genero;
+            document.getElementById('descripcion').textContent = pelicula.descripcion;
+
+            seccionCantidadButacas.style.display = 'block';
+        });
+
         tipoEntradaSelect.addEventListener('change', () => {
             if (tipoEntradaSelect.value) {
                 seccionCantidadButacas.style.display = 'block';
@@ -162,56 +189,45 @@
             const cantidad = parseInt(cantidadButacasInput.value, 10);
 
             if (!cantidad || cantidad < 1 || cantidad > 10) {
-                alert('Por favor, selecciona una cantidad válida (1-10).');
+                alert("Por favor, selecciona una cantidad válida de butacas (1 a 10).");
                 return;
             }
 
-            contenedorButacas.innerHTML = ''; // Limpiar contenido previo
-            for (let i = 1; i <= cantidad; i++) {
-                const boton = document.createElement('button');
-                boton.classList.add('butaca');
-                boton.textContent = `Butaca ${i}`;
-                boton.onclick = () => boton.classList.toggle('selected');
-                contenedorButacas.appendChild(boton);
-            }
-
+            crearButacas(cantidad);
             seccionButacas.style.display = 'block';
-            confirmarButacasBtn.style.display = 'block';
         });
 
-        confirmarButacasBtn.addEventListener('click', () => {
-            const seleccionadas = document.querySelectorAll('.butaca.selected').length;
-            const cantidad = parseInt(cantidadButacasInput.value, 10);
-
-            if (seleccionadas === cantidad) {
-                seccionMetodoPago.style.display = 'block';
-                alert('Seleccionaste todas las butacas requeridas.');
-            } else {
-                alert(`Selecciona ${cantidad} butaca(s).`);
+        function crearButacas(cantidad) {
+            contenedorButacas.innerHTML = ''; // Limpiar cualquier botón previo
+            for (let i = 1; i <= cantidad; i++) {
+                const botonButaca = document.createElement('button');
+                botonButaca.classList.add('butaca');
+                botonButaca.textContent = `Butaca ${i}`;
+                botonButaca.addEventListener('click', () => {
+                    botonButaca.classList.toggle('selected');
+                    actualizarConfirmarButacasBtn();
+                });
+                contenedorButacas.appendChild(botonButaca);
             }
+
+            confirmarButacasBtn.style.display = 'block';
+        }
+
+        function actualizarConfirmarButacasBtn() {
+            const seleccionadas = document.querySelectorAll('.butaca.selected');
+            confirmarButacasBtn.disabled = seleccionadas.length === 0;
+        }
+
+        confirmarButacasBtn.addEventListener('click', () => {
+            seccionMetodoPago.style.display = 'block';
         });
 
         confirmarMetodoBtn.addEventListener('click', () => {
-            const metodo = metodoPagoSelect.value;
-
-            if (metodo) {
-                seccionDatosTarjeta.style.display = 'block';
-            } else {
-                alert('Selecciona un método de pago.');
-            }
+            seccionDatosTarjeta.style.display = 'block';
         });
 
         confirmarPagoBtn.addEventListener('click', () => {
-            const nombre = document.getElementById('nombre-titular').value;
-            const numero = document.getElementById('numero-tarjeta').value;
-            const fecha = document.getElementById('fecha-expiracion').value;
-            const cvv = document.getElementById('codigo-seguridad').value;
-
-            if (nombre && numero && fecha && cvv) {
-                alert('Pago confirmado. ¡Gracias por tu compra!');
-            } else {
-                alert('Por favor, completa todos los campos de la tarjeta.');
-            }
+            alert("Pago confirmado. ¡Gracias por tu compra!");
         });
     </script>
 </body>
