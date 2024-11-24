@@ -261,9 +261,10 @@
 .peliculas {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 20px;
+    justify-content: center;  /* Asegura que las películas estén centradas */
+    gap: 20px;  /* Espacio entre las imágenes */
 }
+
 
 .pelicula {
     width: 200px;
@@ -276,6 +277,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
+    object-fit: cover; /* Añadido para que las imágenes se ajusten sin deformarse */
 }
 
 .pelicula img:hover {
