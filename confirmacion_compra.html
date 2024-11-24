@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Compra</title>
+</head>
+<body>
+    <h1>Confirmación de Compra</h1>
+    <p>Gracias por tu compra.</p>
+    <p><strong>Tipo de Entrada:</strong> <span id="tipo-entrada"></span></p>
+    <p><strong>Butacas Seleccionadas:</strong> <span id="butacas"></span></p>
+    <p><strong>Método de Pago:</strong> <span id="metodo-pago"></span></p>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('tipo-entrada').textContent = params.get('tipoEntrada');
+        document.getElementById('butacas').textContent = params.get('seleccionadas');
+        document.getElementById('metodo-pago').textContent = params.get('metodoPago');
+    </script>
+</body>
+</html>
