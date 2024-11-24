@@ -76,6 +76,29 @@
         #seccion-cantidad-butacas button:hover {
             background-color: #2980b9;
         }
+
+        /* Sección de método de pago */
+        #seccion-metodo-pago {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #seccion-metodo-pago select, #seccion-metodo-pago button {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        #seccion-metodo-pago button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #seccion-metodo-pago button:hover {
+            background-color: #1e8449;
+        }
     </style>
 </head>
 <body>
@@ -100,97 +123,47 @@
         </select>
     </div>
 
-    <!-- Selección de cantidad de butacas (oculta inicialmente) -->
+    <!-- Selección de cantidad de butacas -->
     <div id="seccion-cantidad-butacas" style="display: none;">
         <h3>Selecciona la cantidad de butacas:</h3>
         <input type="number" id="cantidad-butacas" min="1" max="10" placeholder="Cantidad (máximo 10)">
         <button id="confirmar-cantidad">Confirmar</button>
     </div>
 
-    <!-- Selección de butacas (oculta inicialmente) -->
+    <!-- Selección de butacas -->
     <div id="seccion-butacas" style="display: none;">
         <h3>Selecciona tus butacas:</h3>
-        <div class="butacas" id="contenedor-butacas">
-            <!-- Butacas generadas dinámicamente -->
-        </div>
+        <div class="butacas" id="contenedor-butacas"></div>
+        <button id="confirmar-butacas" style="margin-top: 20px; display: none;">Confirmar selección de butacas</button>
     </div>
 
-    <!-- Precios -->
-    <h3 id="precio-tipo" style="display: none;">Precio por asiento:</h3>
+    <!-- Selección de método de pago -->
+    <div id="seccion-metodo-pago">
+        <h3>Selecciona tu método de pago:</h3>
+        <select id="metodo-pago">
+            <option value="" disabled selected>Selecciona un método</option>
+            <option value="mastercard">Mastercard</option>
+            <option value="visa">Visa</option>
+            <option value="mercadopago">Mercado Pago</option>
+        </select>
+        <button id="confirmar-metodo">Confirmar método de pago</button>
+    </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const movie = urlParams.get('movie');
-
-        const peliculas = {
-            venom: {
-                titulo: 'Venom: El Último Baile',
-                duracion: '110 minutos',
-                genero: 'Acción',
-                descripcion: 'El último enfrentamiento de Venom en la ciudad.'
-            },
-            lasustancia: {
-                titulo: 'La Sustancia',
-                duracion: '140 minutos',
-                genero: 'Drama',
-                descripcion: 'Un drama psicológico sobre la búsqueda de la verdad.'
-            },
-            eltimequequeda: {
-                titulo: 'El Tiempo Que Nos Queda',
-                duracion: '107 minutos',
-                genero: 'Drama',
-                descripcion: 'Una reflexión sobre el tiempo y las decisiones que tomamos.'
-            },
-            eljockey: {
-                titulo: 'El Jockey',
-                duracion: '96 minutos',
-                genero: 'Drama',
-                descripcion: 'La historia de un jockey en busca de su último gran triunfo.'
-            },
-            trajerojo: {
-                titulo: 'Código Traje Rojo',
-                duracion: '124 minutos',
-                genero: 'Acción',
-                descripcion: 'Un thriller de acción lleno de giros inesperados.'
-            },
-            terrifier: {
-                titulo: 'Terrifier 3',
-                duracion: '125 minutos',
-                genero: 'Terror',
-                descripcion: 'La tercera entrega de la aterradora saga de terror.'
-            }
-        };
-
-        const pelicula = peliculas[movie] || { titulo: 'Película no encontrada', duracion: '', genero: '', descripcion: '' };
-        document.getElementById('titulo-pelicula').innerText = pelicula.titulo;
-        document.getElementById('duracion').innerText = `Duración: ${pelicula.duracion}`;
-        document.getElementById('genero').innerText = `Género: ${pelicula.genero}`;
-        document.getElementById('descripcion').innerText = pelicula.descripcion;
-
         const tipoEntradaSelect = document.getElementById('tipo-entrada');
         const seccionCantidadButacas = document.getElementById('seccion-cantidad-butacas');
         const seccionButacas = document.getElementById('seccion-butacas');
+        const seccionMetodoPago = document.getElementById('seccion-metodo-pago');
         const cantidadButacasInput = document.getElementById('cantidad-butacas');
         const confirmarCantidadBtn = document.getElementById('confirmar-cantidad');
         const contenedorButacas = document.getElementById('contenedor-butacas');
-        const precioTipo = document.getElementById('precio-tipo');
+        const confirmarButacasBtn = document.getElementById('confirmar-butacas');
+        const metodoPagoSelect = document.getElementById('metodo-pago');
+        const confirmarMetodoBtn = document.getElementById('confirmar-metodo');
 
         tipoEntradaSelect.addEventListener('change', () => {
-            const tipo = tipoEntradaSelect.value;
-            if (tipo) {
+            if (tipoEntradaSelect.value) {
                 seccionCantidadButacas.style.display = 'block';
-                precioTipo.style.display = 'block';
-                switch (tipo) {
-                    case 'menor':
-                        precioTipo.innerText = 'Precio por asiento: $30';
-                        break;
-                    case 'jubilado':
-                        precioTipo.innerText = 'Precio por asiento: $50';
-                        break;
-                    case 'mayor':
-                        precioTipo.innerText = 'Precio por asiento: $100';
-                        break;
-                }
             }
         });
 
@@ -202,20 +175,39 @@
                 return;
             }
 
-            // Generar los botones de las butacas
-            contenedorButacas.innerHTML = ''; // Limpiar cualquier contenido previo
+            contenedorButacas.innerHTML = ''; // Limpiar contenido previo
             for (let i = 1; i <= cantidad; i++) {
                 const boton = document.createElement('button');
                 boton.classList.add('butaca');
                 boton.textContent = `Butaca ${i}`;
-                boton.onclick = () => {
-                    boton.classList.toggle('selected');
-                };
+                boton.onclick = () => boton.classList.toggle('selected');
                 contenedorButacas.appendChild(boton);
             }
 
-            // Mostrar la sección de butacas
             seccionButacas.style.display = 'block';
+            confirmarButacasBtn.style.display = 'block';
+        });
+
+        confirmarButacasBtn.addEventListener('click', () => {
+            const seleccionadas = document.querySelectorAll('.butaca.selected').length;
+            const cantidad = parseInt(cantidadButacasInput.value, 10);
+
+            if (seleccionadas === cantidad) {
+                seccionMetodoPago.style.display = 'block';
+                alert('Seleccionaste todas las butacas requeridas.');
+            } else {
+                alert(`Selecciona ${cantidad} butaca(s).`);
+            }
+        });
+
+        confirmarMetodoBtn.addEventListener('click', () => {
+            const metodo = metodoPagoSelect.value;
+
+            if (metodo) {
+                alert(`Método de pago confirmado: ${metodo.toUpperCase()}.`);
+            } else {
+                alert('Selecciona un método de pago.');
+            }
         });
     </script>
 </body>
