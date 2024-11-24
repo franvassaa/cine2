@@ -6,8 +6,9 @@
     <title>Elección de Butacas</title>
 </head>
 <body>
-    <h1>Elección de Butacas</h1>
+    <h1>Elección de Entradas y Butacas</h1>
 
+    <!-- Información de la película -->
     <div class="informacion-pelicula">
         <h2 id="titulo-pelicula"></h2>
         <p id="duracion"></p>
@@ -15,80 +16,96 @@
         <p id="descripcion"></p>
     </div>
 
-    <h3>Selecciona tus butacas:</h3>
-    <div class="butacas">
-        <!-- Aquí irían los botones o gráficos de los asientos -->
-        <button>Butaca 1</button>
-        <button>Butaca 2</button>
-        <button>Butaca 3</button>
-        <!-- Puedes agregar más botones según el número de asientos -->
+    <!-- Selección de tipo de entrada -->
+    <h3>Selecciona el tipo de entrada:</h3>
+    <div class="seleccion-entrada">
+        <select id="tipo-entrada">
+            <option value="" disabled selected>Selecciona un tipo</option>
+            <option value="general">General - $500</option>
+            <option value="vip">VIP - $1000</option>
+        </select>
     </div>
 
-    <h3>Precios:</h3>
-    <p>Precio por asiento: $500</p>
+    <!-- Selección de butacas (oculta inicialmente) -->
+    <div id="seccion-butacas" style="display: none;">
+        <h3>Selecciona tus butacas:</h3>
+        <div class="butacas">
+            <!-- Botones para asientos -->
+            <button>Butaca 1</button>
+            <button>Butaca 2</button>
+            <button>Butaca 3</button>
+            <!-- Puedes agregar más botones según el número de asientos -->
+        </div>
+    </div>
+
+    <!-- Precios -->
+    <h3 id="precio-tipo" style="display: none;">Precio por asiento:</h3>
 
     <script>
         // Obtener el parámetro "movie" de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const movie = urlParams.get('movie');
 
-        // Cambiar la información de la película según el parámetro
-        let titulo = '';
-        let duracion = '';
-        let genero = '';
-        let descripcion = '';
+        // Información de las películas
+        const peliculas = {
+            venom: {
+                titulo: 'Venom: El Último Baile',
+                duracion: '110 minutos',
+                genero: 'Acción',
+                descripcion: 'El último enfrentamiento de Venom en la ciudad.'
+            },
+            lasustancia: {
+                titulo: 'La Sustancia',
+                duracion: '140 minutos',
+                genero: 'Drama',
+                descripcion: 'Un drama psicológico sobre la búsqueda de la verdad.'
+            },
+            eltimequequeda: {
+                titulo: 'El Tiempo Que Nos Queda',
+                duracion: '107 minutos',
+                genero: 'Drama',
+                descripcion: 'Una reflexión sobre el tiempo y las decisiones que tomamos.'
+            },
+            eljockey: {
+                titulo: 'El Jockey',
+                duracion: '96 minutos',
+                genero: 'Drama',
+                descripcion: 'La historia de un jockey en busca de su último gran triunfo.'
+            },
+            trajerojo: {
+                titulo: 'Código Traje Rojo',
+                duracion: '124 minutos',
+                genero: 'Acción',
+                descripcion: 'Un thriller de acción lleno de giros inesperados.'
+            },
+            terrifier: {
+                titulo: 'Terrifier 3',
+                duracion: '125 minutos',
+                genero: 'Terror',
+                descripcion: 'La tercera entrega de la aterradora saga de terror.'
+            }
+        };
 
-        // Aquí puedes ajustar el contenido para cada película
-        switch(movie) {
-            case 'venom':
-                titulo = 'Venom: El Último Baile';
-                duracion = '110 minutos';
-                genero = 'Acción';
-                descripcion = 'El último enfrentamiento de Venom en la ciudad.';
-                break;
-            case 'lasustancia':
-                titulo = 'La Sustancia';
-                duracion = '140 minutos';
-                genero = 'Drama';
-                descripcion = 'Un drama psicológico sobre la búsqueda de la verdad.';
-                break;
-            case 'eltimequequeda':
-                titulo = 'El Tiempo Que Nos Queda';
-                duracion = '107 minutos';
-                genero = 'Drama';
-                descripcion = 'Una reflexión sobre el tiempo y las decisiones que tomamos.';
-                break;
-            case 'eljockey':
-                titulo = 'El Jockey';
-                duracion = '96 minutos';
-                genero = 'Drama';
-                descripcion = 'La historia de un jockey en busca de su último gran triunfo.';
-                break;
-            case 'trajerojo':
-                titulo = 'Código Traje Rojo';
-                duracion = '124 minutos';
-                genero = 'Acción';
-                descripcion = 'Un thriller de acción lleno de giros inesperados.';
-                break;
-            case 'terrifier':
-                titulo = 'Terrifier 3';
-                duracion = '125 minutos';
-                genero = 'Terror';
-                descripcion = 'La tercera entrega de la aterradora saga de terror.';
-                break;
-            default:
-                titulo = 'Película no encontrada';
-                duracion = '';
-                genero = '';
-                descripcion = '';
-                break;
-        }
+        // Actualizar información de la película
+        const pelicula = peliculas[movie] || { titulo: 'Película no encontrada', duracion: '', genero: '', descripcion: '' };
+        document.getElementById('titulo-pelicula').innerText = pelicula.titulo;
+        document.getElementById('duracion').innerText = `Duración: ${pelicula.duracion}`;
+        document.getElementById('genero').innerText = `Género: ${pelicula.genero}`;
+        document.getElementById('descripcion').innerText = pelicula.descripcion;
 
-        // Actualizar el DOM con la información de la película
-        document.getElementById('titulo-pelicula').innerText = titulo;
-        document.getElementById('duracion').innerText = `Duración: ${duracion}`;
-        document.getElementById('genero').innerText = `Género: ${genero}`;
-        document.getElementById('descripcion').innerText = descripcion;
+        // Manejar selección de tipo de entrada
+        const tipoEntradaSelect = document.getElementById('tipo-entrada');
+        const seccionButacas = document.getElementById('seccion-butacas');
+        const precioTipo = document.getElementById('precio-tipo');
+
+        tipoEntradaSelect.addEventListener('change', () => {
+            const tipo = tipoEntradaSelect.value;
+            if (tipo) {
+                seccionButacas.style.display = 'block';
+                precioTipo.style.display = 'block';
+                precioTipo.innerText = tipo === 'general' ? 'Precio por asiento: $500' : 'Precio por asiento: $1000';
+            }
+        });
     </script>
 </body>
 </html>
