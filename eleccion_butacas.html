@@ -162,10 +162,11 @@
         const confirmarMetodoBtn = document.getElementById('confirmar-metodo');
         const confirmarPagoBtn = document.getElementById('confirmar-pago');
 
+        // Datos de las películas y su cantidad de butacas
         const peliculas = {
-            1: {titulo: "Película 1", duracion: "120 minutos", genero: "Acción", descripcion: "Descripción de la película 1."},
-            2: {titulo: "Película 2", duracion: "90 minutos", genero: "Comedia", descripcion: "Descripción de la película 2."},
-            3: {titulo: "Película 3", duracion: "150 minutos", genero: "Drama", descripcion: "Descripción de la película 3."},
+            1: {titulo: "Película 1", duracion: "120 minutos", genero: "Acción", descripcion: "Descripción de la película 1.", butacas: 10},
+            2: {titulo: "Película 2", duracion: "90 minutos", genero: "Comedia", descripcion: "Descripción de la película 2.", butacas: 8},
+            3: {titulo: "Película 3", duracion: "150 minutos", genero: "Drama", descripcion: "Descripción de la película 3.", butacas: 12},
         };
 
         seleccionPeliculaSelect.addEventListener('change', () => {
@@ -176,24 +177,22 @@
             document.getElementById('genero').textContent = pelicula.genero;
             document.getElementById('descripcion').textContent = pelicula.descripcion;
 
-            seccionCantidadButacas.style.display = 'block';
+            // Mostrar cantidad de butacas dependiendo de la película
+            crearButacas(pelicula.butacas);
+            seccionButacas.style.display = 'block';
+            seccionCantidadButacas.style.display = 'none'; // Ocultar la sección de cantidad de butacas
         });
 
         tipoEntradaSelect.addEventListener('change', () => {
-            if (tipoEntradaSelect.value) {
-                seccionCantidadButacas.style.display = 'block';
-            }
+            seccionCantidadButacas.style.display = 'block';
         });
 
         confirmarCantidadBtn.addEventListener('click', () => {
-            const cantidad = parseInt(cantidadButacasInput.value, 10);
-
-            if (!cantidad || cantidad < 1 || cantidad > 10) {
+            const cantidad = parseInt(cantidadButacasInput.value);
+            if (isNaN(cantidad) || cantidad < 1 || cantidad > 10) {
                 alert("Por favor, selecciona una cantidad válida de butacas (1 a 10).");
                 return;
             }
-
-            crearButacas(cantidad);
             seccionButacas.style.display = 'block';
         });
 
