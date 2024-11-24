@@ -260,24 +260,24 @@
 
 .peliculas {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;  /* Asegura que las películas estén centradas */
+    flex-wrap: wrap;  /* Permite que las películas se acomoden en varias filas */
+    justify-content: space-around; /* Distribuye las películas en la fila */
     gap: 20px;  /* Espacio entre las imágenes */
 }
 
-
 .pelicula {
-    width: 200px;
+    width: 250px; /* Ajustamos el tamaño de las películas */
     text-align: center;
+    margin: 10px;  /* Añadimos un pequeño margen para separar las películas */
 }
 
 .pelicula img {
     width: 100%;
-    height: auto;
+    height: 350px; /* Establecemos una altura fija */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
-    object-fit: cover; /* Añadido para que las imágenes se ajusten sin deformarse */
+    object-fit: cover; /* Asegura que las imágenes no se deformen */
 }
 
 .pelicula img:hover {
