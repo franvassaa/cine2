@@ -18,6 +18,28 @@
             color: #2e3b4e;
         }
 
+        /* Botones uniformes */
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background-color: #e74c3c;
+            cursor: not-allowed;
+        }
+
         /* Contenedor de las butacas */
         .butacas {
             display: grid;
@@ -99,6 +121,16 @@
         #seccion-metodo-pago button:hover {
             background-color: #1e8449;
         }
+
+        /* Sección de resumen de compra */
+        #resumen-compra {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #resumen-compra p {
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -149,6 +181,16 @@
         <button id="confirmar-metodo">Confirmar método de pago</button>
     </div>
 
+    <!-- Resumen de la compra -->
+    <div id="resumen-compra">
+        <h3>Resumen de tu compra:</h3>
+        <p><strong>Pelicula:</strong> <span id="resumen-titulo-pelicula"></span></p>
+        <p><strong>Tipo de entrada:</strong> <span id="resumen-tipo-entrada"></span></p>
+        <p><strong>Cantidad de butacas:</strong> <span id="resumen-cantidad-butacas"></span></p>
+        <p><strong>Butacas seleccionadas:</strong> <span id="resumen-butacas"></span></p>
+        <p><strong>Método de pago:</strong> <span id="resumen-metodo-pago"></span></p>
+    </div>
+
     <script>
         const tipoEntradaSelect = document.getElementById('tipo-entrada');
         const seccionCantidadButacas = document.getElementById('seccion-cantidad-butacas');
@@ -160,9 +202,20 @@
         const confirmarButacasBtn = document.getElementById('confirmar-butacas');
         const metodoPagoSelect = document.getElementById('metodo-pago');
         const confirmarMetodoBtn = document.getElementById('confirmar-metodo');
+        const resumenCompra = document.getElementById('resumen-compra');
+        const resumenTituloPelicula = document.getElementById('resumen-titulo-pelicula');
+        const resumenTipoEntrada = document.getElementById('resumen-tipo-entrada');
+        const resumenCantidadButacas = document.getElementById('resumen-cantidad-butacas');
+        const resumenButacas = document.getElementById('resumen-butacas');
+        const resumenMetodoPago = document.getElementById('resumen-metodo-pago');
+
+        let seleccionadas = [];
+        let tipoEntrada = '';
+        let metodoPago = '';
 
         tipoEntradaSelect.addEventListener('change', () => {
             if (tipoEntradaSelect.value) {
+                tipoEntrada = tipoEntradaSelect.value;
                 seccionCantidadButacas.style.display = 'block';
             }
         });
@@ -180,34 +233,33 @@
                 const boton = document.createElement('div');
                 boton.classList.add('butaca');
                 boton.textContent = `Butaca ${i}`;
-                boton.onclick = () => boton.classList.toggle('selected');
+                boton.addEventListener('click', () => {
+                    boton.classList.toggle('selected');
+                    if (boton.classList.contains('selected')) {
+                        seleccionadas.push(boton.textContent);
+                    } else {
+                        seleccionadas = seleccionadas.filter(b => b !== boton.textContent);
+                    }
+                    confirmarButacasBtn.style.display = seleccionadas.length > 0 ? 'block' : 'none';
+                });
                 contenedorButacas.appendChild(boton);
             }
 
             seccionButacas.style.display = 'block';
-            confirmarButacasBtn.style.display = 'block';
         });
 
         confirmarButacasBtn.addEventListener('click', () => {
-            const seleccionadas = document.querySelectorAll('.butaca.selected').length;
-            const cantidad = parseInt(cantidadButacasInput.value, 10);
-
-            if (seleccionadas === cantidad) {
-                seccionMetodoPago.style.display = 'block';
-                alert('Seleccionaste todas las butacas requeridas.');
-            } else {
-                alert(`Selecciona ${cantidad} butaca(s).`);
-            }
+            seccionMetodoPago.style.display = 'block';
         });
 
         confirmarMetodoBtn.addEventListener('click', () => {
-            const metodo = metodoPagoSelect.value;
-
-            if (metodo) {
-                alert(`Método de pago confirmado: ${metodo.toUpperCase()}.`);
-            } else {
-                alert('Selecciona un método de pago.');
-            }
+            metodoPago = metodoPagoSelect.value;
+            resumenCompra.style.display = 'block';
+            resumenTituloPelicula.textContent = 'Venom 2'; // Ejemplo
+            resumenTipoEntrada.textContent = tipoEntrada;
+            resumenCantidadButacas.textContent = seleccionadas.length;
+            resumenButacas.textContent = seleccionadas.join(', ');
+            resumenMetodoPago.textContent = metodoPago;
         });
     </script>
 </body>
