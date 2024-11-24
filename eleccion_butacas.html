@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elección de Butacas</title>
+    <title>Elección de Entradas y Butacas</title>
 </head>
 <body>
     <h1>Elección de Entradas y Butacas</h1>
@@ -26,15 +26,18 @@
         </select>
     </div>
 
+    <!-- Selección de cantidad de butacas (oculta inicialmente) -->
+    <div id="seccion-cantidad-butacas" style="display: none;">
+        <h3>Selecciona la cantidad de butacas:</h3>
+        <input type="number" id="cantidad-butacas" min="1" max="10" placeholder="Cantidad (máximo 10)">
+        <button id="confirmar-cantidad">Confirmar</button>
+    </div>
+
     <!-- Selección de butacas (oculta inicialmente) -->
     <div id="seccion-butacas" style="display: none;">
         <h3>Selecciona tus butacas:</h3>
-        <div class="butacas">
-            <!-- Botones para asientos -->
-            <button>Butaca 1</button>
-            <button>Butaca 2</button>
-            <button>Butaca 3</button>
-            <!-- Puedes agregar más botones según el número de asientos -->
+        <div class="butacas" id="contenedor-butacas">
+            <!-- Botones de butacas generados dinámicamente -->
         </div>
     </div>
 
@@ -95,16 +98,40 @@
 
         // Manejar selección de tipo de entrada
         const tipoEntradaSelect = document.getElementById('tipo-entrada');
+        const seccionCantidadButacas = document.getElementById('seccion-cantidad-butacas');
         const seccionButacas = document.getElementById('seccion-butacas');
+        const cantidadButacasInput = document.getElementById('cantidad-butacas');
+        const confirmarCantidadBtn = document.getElementById('confirmar-cantidad');
+        const contenedorButacas = document.getElementById('contenedor-butacas');
         const precioTipo = document.getElementById('precio-tipo');
 
         tipoEntradaSelect.addEventListener('change', () => {
             const tipo = tipoEntradaSelect.value;
             if (tipo) {
-                seccionButacas.style.display = 'block';
+                seccionCantidadButacas.style.display = 'block';
                 precioTipo.style.display = 'block';
                 precioTipo.innerText = tipo === 'general' ? 'Precio por asiento: $500' : 'Precio por asiento: $1000';
             }
+        });
+
+        confirmarCantidadBtn.addEventListener('click', () => {
+            const cantidad = parseInt(cantidadButacasInput.value, 10);
+
+            if (!cantidad || cantidad < 1 || cantidad > 10) {
+                alert('Por favor, selecciona una cantidad válida (1-10).');
+                return;
+            }
+
+            // Generar los botones de las butacas
+            contenedorButacas.innerHTML = ''; // Limpiar cualquier contenido previo
+            for (let i = 1; i <= cantidad; i++) {
+                const boton = document.createElement('button');
+                boton.textContent = `Butaca ${i}`;
+                contenedorButacas.appendChild(boton);
+            }
+
+            // Mostrar la sección de butacas
+            seccionButacas.style.display = 'block';
         });
     </script>
 </body>
