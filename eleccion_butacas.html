@@ -4,6 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elección de Entradas y Butacas</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h3 {
+            color: #2e3b4e;
+        }
+
+        /* Contenedor de las butacas */
+        .butacas {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr); /* 10 butacas por fila */
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .butaca {
+            background-color: #7f8c8d;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .butaca:hover {
+            background-color: #95a5a6;
+            transform: scale(1.1);
+        }
+
+        .butaca.selected {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .butaca.selected:hover {
+            background-color: #2980b9;
+        }
+
+        .butaca.occupied {
+            background-color: #e74c3c;
+            cursor: not-allowed;
+        }
+
+        /* Formulario de cantidad de butacas */
+        #seccion-cantidad-butacas input {
+            padding: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+            width: 50px;
+        }
+
+        #seccion-cantidad-butacas button {
+            padding: 5px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #seccion-cantidad-butacas button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
     <h1>Elección de Entradas y Butacas</h1>
@@ -20,7 +93,10 @@
     <h3>Selecciona el tipo de entrada:</h3>
     <div class="seleccion-entrada">
         <select id="tipo-entrada">
-            <!-- Opciones cargadas dinámicamente -->
+            <option value="" disabled selected>Selecciona un tipo</option>
+            <option value="menor">Menor de edad - $30</option>
+            <option value="jubilado">Jubilado - $50</option>
+            <option value="mayor">Mayor de edad - $100</option>
         </select>
     </div>
 
@@ -35,7 +111,7 @@
     <div id="seccion-butacas" style="display: none;">
         <h3>Selecciona tus butacas:</h3>
         <div class="butacas" id="contenedor-butacas">
-            <!-- Botones de butacas generados dinámicamente -->
+            <!-- Butacas generadas dinámicamente -->
         </div>
     </div>
 
@@ -43,11 +119,9 @@
     <h3 id="precio-tipo" style="display: none;">Precio por asiento:</h3>
 
     <script>
-        // Obtener el parámetro "movie" de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const movie = urlParams.get('movie');
 
-        // Información de las películas
         const peliculas = {
             venom: {
                 titulo: 'Venom: El Último Baile',
@@ -87,30 +161,13 @@
             }
         };
 
-        // Actualizar información de la película
-        const pelicula = peliculas[movie];
-        if (pelicula) {
-            document.getElementById('titulo-pelicula').innerText = pelicula.titulo;
-            document.getElementById('duracion').innerText = `Duración: ${pelicula.duracion}`;
-            document.getElementById('genero').innerText = `Género: ${pelicula.genero}`;
-            document.getElementById('descripcion').innerText = pelicula.descripcion;
-        } else {
-            document.getElementById('titulo-pelicula').innerText = 'Película no encontrada';
-            document.getElementById('duracion').innerText = '';
-            document.getElementById('genero').innerText = '';
-            document.getElementById('descripcion').innerText = '';
-        }
+        const pelicula = peliculas[movie] || { titulo: 'Película no encontrada', duracion: '', genero: '', descripcion: '' };
+        document.getElementById('titulo-pelicula').innerText = pelicula.titulo;
+        document.getElementById('duracion').innerText = `Duración: ${pelicula.duracion}`;
+        document.getElementById('genero').innerText = `Género: ${pelicula.genero}`;
+        document.getElementById('descripcion').innerText = pelicula.descripcion;
 
-        // Mostrar opciones de tipo de entrada dinámicamente
         const tipoEntradaSelect = document.getElementById('tipo-entrada');
-        tipoEntradaSelect.innerHTML = `
-            <option value="" disabled selected>Selecciona un tipo</option>
-            <option value="menor">Menor de edad - $30</option>
-            <option value="jubilado">Jubilado - $50</option>
-            <option value="mayor">Mayor de edad - $100</option>
-        `;
-
-        // Control de selección de entrada
         const seccionCantidadButacas = document.getElementById('seccion-cantidad-butacas');
         const seccionButacas = document.getElementById('seccion-butacas');
         const cantidadButacasInput = document.getElementById('cantidad-butacas');
@@ -149,7 +206,11 @@
             contenedorButacas.innerHTML = ''; // Limpiar cualquier contenido previo
             for (let i = 1; i <= cantidad; i++) {
                 const boton = document.createElement('button');
+                boton.classList.add('butaca');
                 boton.textContent = `Butaca ${i}`;
+                boton.onclick = () => {
+                    boton.classList.toggle('selected');
+                };
                 contenedorButacas.appendChild(boton);
             }
 
