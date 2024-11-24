@@ -177,7 +177,7 @@
 
             contenedorButacas.innerHTML = ''; // Limpiar contenido previo
             for (let i = 1; i <= cantidad; i++) {
-                const boton = document.createElement('button');
+                const boton = document.createElement('div');
                 boton.classList.add('butaca');
                 boton.textContent = `Butaca ${i}`;
                 boton.onclick = () => boton.classList.toggle('selected');
