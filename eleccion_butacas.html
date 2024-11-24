@@ -17,67 +17,6 @@
         h1, h3 {
             color: #2e3b4e;
         }
-
-        /* Contenedor de las butacas */
-        .butacas {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr); /* 10 butacas por fila */
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .butaca {
-            background-color: #7f8c8d;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-            color: white;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        .butaca:hover {
-            background-color: #95a5a6;
-            transform: scale(1.1);
-        }
-
-        .butaca.selected {
-            background-color: #3498db;
-            color: white;
-        }
-
-        .butaca.selected:hover {
-            background-color: #2980b9;
-        }
-
-        .butaca.occupied {
-            background-color: #e74c3c;
-            cursor: not-allowed;
-        }
-
-        /* Formulario de datos de tarjeta */
-        #seccion-datos-tarjeta input {
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 10px;
-            width: calc(100% - 20px);
-            display: block;
-        }
-
-        #seccion-datos-tarjeta button {
-            padding: 10px;
-            font-size: 16px;
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        #seccion-datos-tarjeta button:hover {
-            background-color: #1e8449;
-        }
     </style>
 </head>
 <body>
@@ -152,8 +91,13 @@
         const confirmarMetodoBtn = document.getElementById('confirmar-metodo');
         const confirmarPagoBtn = document.getElementById('confirmar-pago');
 
+        let seleccionadas = [];
+        let tipoEntrada = '';
+        let metodoPago = '';
+
         tipoEntradaSelect.addEventListener('change', () => {
-            if (tipoEntradaSelect.value) {
+            tipoEntrada = tipoEntradaSelect.value;
+            if (tipoEntrada) {
                 seccionCantidadButacas.style.display = 'block';
             }
         });
@@ -180,21 +124,20 @@
         });
 
         confirmarButacasBtn.addEventListener('click', () => {
-            const seleccionadas = document.querySelectorAll('.butaca.selected').length;
-            const cantidad = parseInt(cantidadButacasInput.value, 10);
+            seleccionadas = Array.from(document.querySelectorAll('.butaca.selected')).map(butaca => butaca.textContent);
 
-            if (seleccionadas === cantidad) {
+            if (seleccionadas.length === parseInt(cantidadButacasInput.value, 10)) {
                 seccionMetodoPago.style.display = 'block';
                 alert('Seleccionaste todas las butacas requeridas.');
             } else {
-                alert(`Selecciona ${cantidad} butaca(s).`);
+                alert(`Selecciona ${cantidadButacasInput.value} butaca(s).`);
             }
         });
 
         confirmarMetodoBtn.addEventListener('click', () => {
-            const metodo = metodoPagoSelect.value;
+            metodoPago = metodoPagoSelect.value;
 
-            if (metodo) {
+            if (metodoPago) {
                 seccionDatosTarjeta.style.display = 'block';
             } else {
                 alert('Selecciona un método de pago.');
@@ -208,7 +151,14 @@
             const cvv = document.getElementById('codigo-seguridad').value;
 
             if (nombre && numero && fecha && cvv) {
-                alert('Pago confirmado. ¡Gracias por tu compra!');
+                const datosCompra = {
+                    tipoEntrada,
+                    seleccionadas,
+                    metodoPago
+                };
+
+                const queryString = new URLSearchParams(datosCompra).toString();
+                window.location.href = `confirmacion_compra.html?${queryString}`;
             } else {
                 alert('Por favor, completa todos los campos de la tarjeta.');
             }
