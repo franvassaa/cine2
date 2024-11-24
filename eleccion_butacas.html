@@ -21,8 +21,9 @@
     <div class="seleccion-entrada">
         <select id="tipo-entrada">
             <option value="" disabled selected>Selecciona un tipo</option>
-            <option value="general">General - $500</option>
-            <option value="vip">VIP - $1000</option>
+            <option value="menor">Menor de edad - $30</option>
+            <option value="jubilado">Jubilado - $50</option>
+            <option value="mayor">Mayor de edad - $100</option>
         </select>
     </div>
 
@@ -44,103 +45,112 @@
     <!-- Precios -->
     <h3 id="precio-tipo" style="display: none;">Precio por asiento:</h3>
 
-<script>
-    // Obtener el parámetro "movie" de la URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const movie = urlParams.get('movie');
+    <script>
+        // Obtener el parámetro "movie" de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const movie = urlParams.get('movie');
 
-    // Información de las películas
-    const peliculas = {
-        venom: {
-            titulo: 'Venom: El Último Baile',
-            duracion: '110 minutos',
-            genero: 'Acción',
-            descripcion: 'El último enfrentamiento de Venom en la ciudad.'
-        },
-        lasustancia: {
-            titulo: 'La Sustancia',
-            duracion: '140 minutos',
-            genero: 'Drama',
-            descripcion: 'Un drama psicológico sobre la búsqueda de la verdad.'
-        },
-        eltimequequeda: {
-            titulo: 'El Tiempo Que Nos Queda',
-            duracion: '107 minutos',
-            genero: 'Drama',
-            descripcion: 'Una reflexión sobre el tiempo y las decisiones que tomamos.'
-        },
-        eljockey: {
-            titulo: 'El Jockey',
-            duracion: '96 minutos',
-            genero: 'Drama',
-            descripcion: 'La historia de un jockey en busca de su último gran triunfo.'
-        },
-        trajerojo: {
-            titulo: 'Código Traje Rojo',
-            duracion: '124 minutos',
-            genero: 'Acción',
-            descripcion: 'Un thriller de acción lleno de giros inesperados.'
-        },
-        terrifier: {
-            titulo: 'Terrifier 3',
-            duracion: '125 minutos',
-            genero: 'Terror',
-            descripcion: 'La tercera entrega de la aterradora saga de terror.'
-        }
-    };
+        // Información de las películas
+        const peliculas = {
+            venom: {
+                titulo: 'Venom: El Último Baile',
+                duracion: '110 minutos',
+                genero: 'Acción',
+                descripcion: 'El último enfrentamiento de Venom en la ciudad.'
+            },
+            lasustancia: {
+                titulo: 'La Sustancia',
+                duracion: '140 minutos',
+                genero: 'Drama',
+                descripcion: 'Un drama psicológico sobre la búsqueda de la verdad.'
+            },
+            eltimequequeda: {
+                titulo: 'El Tiempo Que Nos Queda',
+                duracion: '107 minutos',
+                genero: 'Drama',
+                descripcion: 'Una reflexión sobre el tiempo y las decisiones que tomamos.'
+            },
+            eljockey: {
+                titulo: 'El Jockey',
+                duracion: '96 minutos',
+                genero: 'Drama',
+                descripcion: 'La historia de un jockey en busca de su último gran triunfo.'
+            },
+            trajerojo: {
+                titulo: 'Código Traje Rojo',
+                duracion: '124 minutos',
+                genero: 'Acción',
+                descripcion: 'Un thriller de acción lleno de giros inesperados.'
+            },
+            terrifier: {
+                titulo: 'Terrifier 3',
+                duracion: '125 minutos',
+                genero: 'Terror',
+                descripcion: 'La tercera entrega de la aterradora saga de terror.'
+            }
+        };
 
-    // Actualizar información de la película
-    const pelicula = peliculas[movie];
-    if (pelicula) {
-        document.getElementById('titulo-pelicula').innerText = pelicula.titulo;
-        document.getElementById('duracion').innerText = `Duración: ${pelicula.duracion}`;
-        document.getElementById('genero').innerText = `Género: ${pelicula.genero}`;
-        document.getElementById('descripcion').innerText = pelicula.descripcion;
-    } else {
-        document.getElementById('titulo-pelicula').innerText = 'Película no encontrada';
-        document.getElementById('duracion').innerText = '';
-        document.getElementById('genero').innerText = '';
-        document.getElementById('descripcion').innerText = '';
-    }
-
-    // Mostrar opciones de tipo de entrada y cantidad de butacas siempre
-    const tipoEntradaSelect = document.getElementById('tipo-entrada');
-    const seccionCantidadButacas = document.getElementById('seccion-cantidad-butacas');
-    const seccionButacas = document.getElementById('seccion-butacas');
-    const cantidadButacasInput = document.getElementById('cantidad-butacas');
-    const confirmarCantidadBtn = document.getElementById('confirmar-cantidad');
-    const contenedorButacas = document.getElementById('contenedor-butacas');
-    const precioTipo = document.getElementById('precio-tipo');
-
-    tipoEntradaSelect.addEventListener('change', () => {
-        const tipo = tipoEntradaSelect.value;
-        if (tipo) {
-            seccionCantidadButacas.style.display = 'block';
-            precioTipo.style.display = 'block';
-            precioTipo.innerText = tipo === 'general' ? 'Precio por asiento: $500' : 'Precio por asiento: $1000';
-        }
-    });
-
-    confirmarCantidadBtn.addEventListener('click', () => {
-        const cantidad = parseInt(cantidadButacasInput.value, 10);
-
-        if (!cantidad || cantidad < 1 || cantidad > 10) {
-            alert('Por favor, selecciona una cantidad válida (1-10).');
-            return;
+        // Actualizar información de la película
+        const pelicula = peliculas[movie];
+        if (pelicula) {
+            document.getElementById('titulo-pelicula').innerText = pelicula.titulo;
+            document.getElementById('duracion').innerText = `Duración: ${pelicula.duracion}`;
+            document.getElementById('genero').innerText = `Género: ${pelicula.genero}`;
+            document.getElementById('descripcion').innerText = pelicula.descripcion;
+        } else {
+            document.getElementById('titulo-pelicula').innerText = 'Película no encontrada';
+            document.getElementById('duracion').innerText = '';
+            document.getElementById('genero').innerText = '';
+            document.getElementById('descripcion').innerText = '';
         }
 
-        // Generar los botones de las butacas
-        contenedorButacas.innerHTML = ''; // Limpiar cualquier contenido previo
-        for (let i = 1; i <= cantidad; i++) {
-            const boton = document.createElement('button');
-            boton.textContent = `Butaca ${i}`;
-            contenedorButacas.appendChild(boton);
-        }
+        // Mostrar opciones de tipo de entrada y cantidad de butacas siempre
+        const tipoEntradaSelect = document.getElementById('tipo-entrada');
+        const seccionCantidadButacas = document.getElementById('seccion-cantidad-butacas');
+        const seccionButacas = document.getElementById('seccion-butacas');
+        const cantidadButacasInput = document.getElementById('cantidad-butacas');
+        const confirmarCantidadBtn = document.getElementById('confirmar-cantidad');
+        const contenedorButacas = document.getElementById('contenedor-butacas');
+        const precioTipo = document.getElementById('precio-tipo');
 
-        // Mostrar la sección de butacas
-        seccionButacas.style.display = 'block';
-    });
-</script>
+        tipoEntradaSelect.addEventListener('change', () => {
+            const tipo = tipoEntradaSelect.value;
+            if (tipo) {
+                seccionCantidadButacas.style.display = 'block';
+                precioTipo.style.display = 'block';
+                switch (tipo) {
+                    case 'menor':
+                        precioTipo.innerText = 'Precio por asiento: $30';
+                        break;
+                    case 'jubilado':
+                        precioTipo.innerText = 'Precio por asiento: $50';
+                        break;
+                    case 'mayor':
+                        precioTipo.innerText = 'Precio por asiento: $100';
+                        break;
+                }
+            }
+        });
 
+        confirmarCantidadBtn.addEventListener('click', () => {
+            const cantidad = parseInt(cantidadButacasInput.value, 10);
+
+            if (!cantidad || cantidad < 1 || cantidad > 10) {
+                alert('Por favor, selecciona una cantidad válida (1-10).');
+                return;
+            }
+
+            // Generar los botones de las butacas
+            contenedorButacas.innerHTML = ''; // Limpiar cualquier contenido previo
+            for (let i = 1; i <= cantidad; i++) {
+                const boton = document.createElement('button');
+                boton.textContent = `Butaca ${i}`;
+                contenedorButacas.appendChild(boton);
+            }
+
+            // Mostrar la sección de butacas
+            seccionButacas.style.display = 'block';
+        });
+    </script>
 </body>
 </html>
