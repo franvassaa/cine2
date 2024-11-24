@@ -18,12 +18,35 @@
             color: #2e3b4e;
         }
 
+        /* Contenedor de las películas */
+        .cartelera {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pelicula {
+            background-color: #2e3b4e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .pelicula:hover {
+            background-color: #34495e;
+        }
+
         /* Contenedor de las butacas */
         .butacas {
             display: grid;
             grid-template-columns: repeat(10, 1fr); /* 10 butacas por fila */
             gap: 10px;
             margin-top: 20px;
+            max-height: 500px; /* Limita la altura de la sección de butacas */
+            overflow-y: auto; /* Añade scroll si hay demasiadas butacas */
         }
 
         .butaca {
@@ -83,22 +106,24 @@
 <body>
     <h1>Elección de Entradas y Butacas</h1>
 
-    <!-- Información de la película -->
-    <div class="informacion-pelicula">
-        <h2 id="titulo-pelicula"></h2>
-        <p id="duracion"></p>
-        <p id="genero"></p>
-        <p id="descripcion"></p>
+    <!-- Cartelera de películas -->
+    <div class="cartelera">
+        <div class="pelicula" data-pelicula="1">
+            <h3>Pelicula 1</h3>
+            <p>Duración: 120 min</p>
+            <p>Género: Acción</p>
+        </div>
+        <div class="pelicula" data-pelicula="2">
+            <h3>Pelicula 2</h3>
+            <p>Duración: 110 min</p>
+            <p>Género: Comedia</p>
+        </div>
+        <div class="pelicula" data-pelicula="3">
+            <h3>Pelicula 3</h3>
+            <p>Duración: 140 min</p>
+            <p>Género: Drama</p>
+        </div>
     </div>
-
-    <!-- Selección de película -->
-    <h3>Selecciona una película:</h3>
-    <select id="seleccion-pelicula">
-        <option value="" disabled selected>Selecciona una película</option>
-        <option value="1">Película 1</option>
-        <option value="2">Película 2</option>
-        <option value="3">Película 3</option>
-    </select>
 
     <!-- Selección de tipo de entrada -->
     <h3>Selecciona el tipo de entrada:</h3>
@@ -149,7 +174,6 @@
 
     <script>
         const tipoEntradaSelect = document.getElementById('tipo-entrada');
-        const seleccionPeliculaSelect = document.getElementById('seleccion-pelicula');
         const seccionCantidadButacas = document.getElementById('seccion-cantidad-butacas');
         const seccionButacas = document.getElementById('seccion-butacas');
         const seccionMetodoPago = document.getElementById('seccion-metodo-pago');
@@ -162,71 +186,54 @@
         const confirmarMetodoBtn = document.getElementById('confirmar-metodo');
         const confirmarPagoBtn = document.getElementById('confirmar-pago');
 
-        // Datos de las películas y su cantidad de butacas
-        const peliculas = {
-            1: {titulo: "Película 1", duracion: "120 minutos", genero: "Acción", descripcion: "Descripción de la película 1.", butacas: 10},
-            2: {titulo: "Película 2", duracion: "90 minutos", genero: "Comedia", descripcion: "Descripción de la película 2.", butacas: 8},
-            3: {titulo: "Película 3", duracion: "150 minutos", genero: "Drama", descripcion: "Descripción de la película 3.", butacas: 12},
-        };
-
-        seleccionPeliculaSelect.addEventListener('change', () => {
-            const peliculaSeleccionada = seleccionPeliculaSelect.value;
-            const pelicula = peliculas[peliculaSeleccionada];
-            document.getElementById('titulo-pelicula').textContent = pelicula.titulo;
-            document.getElementById('duracion').textContent = pelicula.duracion;
-            document.getElementById('genero').textContent = pelicula.genero;
-            document.getElementById('descripcion').textContent = pelicula.descripcion;
-
-            // Mostrar cantidad de butacas dependiendo de la película
-            crearButacas(pelicula.butacas);
-            seccionButacas.style.display = 'block';
-            seccionCantidadButacas.style.display = 'none'; // Ocultar la sección de cantidad de butacas
+        // Cuando el usuario hace clic en una película
+        const peliculas = document.querySelectorAll('.pelicula');
+        peliculas.forEach(pelicula => {
+            pelicula.addEventListener('click', () => {
+                // Mostrar la sección de selección de entrada
+                seccionCantidadButacas.style.display = 'block';
+            });
         });
 
         tipoEntradaSelect.addEventListener('change', () => {
-            seccionCantidadButacas.style.display = 'block';
+            if (tipoEntradaSelect.value) {
+                seccionCantidadButacas.style.display = 'block';
+            }
         });
 
         confirmarCantidadBtn.addEventListener('click', () => {
-            const cantidad = parseInt(cantidadButacasInput.value);
-            if (isNaN(cantidad) || cantidad < 1 || cantidad > 10) {
-                alert("Por favor, selecciona una cantidad válida de butacas (1 a 10).");
+            const cantidad = parseInt(cantidadButacasInput.value, 10);
+
+            if (!cantidad || cantidad < 1 || cantidad > 10) {
+                alert('Por favor, selecciona una cantidad válida (1-10).');
                 return;
             }
+
+            contenedorButacas.innerHTML = ''; // Limpiar contenido previo
+            for (let i = 1; i <= cantidad; i++) {
+                const boton = document.createElement('button');
+                boton.classList.add('butaca');
+                boton.textContent = `Butaca ${i}`;
+                boton.addEventListener('click', () => {
+                    boton.classList.toggle('selected');
+                    confirmarButacasBtn.style.display = 'block'; // Mostrar el botón para confirmar butacas
+                });
+                contenedorButacas.appendChild(boton);
+            }
+
             seccionButacas.style.display = 'block';
         });
 
-        function crearButacas(cantidad) {
-            contenedorButacas.innerHTML = ''; // Limpiar cualquier botón previo
-            for (let i = 1; i <= cantidad; i++) {
-                const botonButaca = document.createElement('button');
-                botonButaca.classList.add('butaca');
-                botonButaca.textContent = `Butaca ${i}`;
-                botonButaca.addEventListener('click', () => {
-                    botonButaca.classList.toggle('selected');
-                    actualizarConfirmarButacasBtn();
-                });
-                contenedorButacas.appendChild(botonButaca);
-            }
-
-            confirmarButacasBtn.style.display = 'block';
-        }
-
-        function actualizarConfirmarButacasBtn() {
-            const seleccionadas = document.querySelectorAll('.butaca.selected');
-            confirmarButacasBtn.disabled = seleccionadas.length === 0;
-        }
-
         confirmarButacasBtn.addEventListener('click', () => {
-            seccionMetodoPago.style.display = 'block';
+            seccionMetodoPago.style.display = 'block'; // Mostrar sección de pago
         });
 
         confirmarMetodoBtn.addEventListener('click', () => {
-            seccionDatosTarjeta.style.display = 'block';
+            seccionDatosTarjeta.style.display = 'block'; // Mostrar datos de tarjeta
         });
 
         confirmarPagoBtn.addEventListener('click', () => {
-            alert("Pago confirmado. ¡Gracias por tu compra!");
+            alert('Pago confirmado!'); // Mensaje final de pago
         });
     </script>
 </body>
