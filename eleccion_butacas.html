@@ -219,5 +219,22 @@
             alert("Pago confirmado. ¡Gracias por tu compra!");
         });
     </script>
+        <h2>Formulario de Compra</h2>
+    <form action="procesar_compra.php" method="POST">
+        <label for="nombre_cliente">Nombre:</label>
+        <input type="text" id="nombre_cliente" name="nombre_cliente" required><br>
+
+        <label for="pelicula">Película:</label>
+        <input type="text" id="pelicula" name="pelicula" value="Nombre de la Película" required><br> <!-- Podrías agregar un valor dinámico dependiendo de la selección del usuario -->
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" required><br>
+
+        <label for="total">Total:</label>
+        <input type="text" id="total" name="total" required><br>
+
+        <input type="submit" value="Comprar">
+    </form>
+
 </body>
 </html>
