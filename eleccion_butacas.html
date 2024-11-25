@@ -148,6 +148,23 @@
         <button id="confirmar-pago">Confirmar pago</button>
     </div>
 
+    <h2>Formulario de Compra</h2>
+    <form action="eleccion_butacas.php" method="POST">
+        <label for="nombre_cliente">Nombre:</label>
+        <input type="text" id="nombre_cliente" name="nombre_cliente" required><br>
+
+        <label for="pelicula">Película:</label>
+        <input type="text" id="pelicula" name="pelicula" required><br>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" required><br>
+
+        <label for="total">Total:</label>
+        <input type="text" id="total" name="total" required><br>
+
+        <input type="submit" value="Comprar">
+    </form>
+
     <script>
         const tipoEntradaSelect = document.getElementById('tipo-entrada');
         const seleccionPeliculaSelect = document.getElementById('seleccion-pelicula');
@@ -163,7 +180,6 @@
         const confirmarMetodoBtn = document.getElementById('confirmar-metodo');
         const confirmarPagoBtn = document.getElementById('confirmar-pago');
 
-        // Datos de las películas y su cantidad de butacas
         const peliculas = {
             1: {titulo: "Película 1", duracion: "120 minutos", genero: "Acción", descripcion: "Descripción de la película 1.", tiempoDisponible: "1 hora 30 minutos", butacas: 10},
             2: {titulo: "Película 2", duracion: "90 minutos", genero: "Comedia", descripcion: "Descripción de la película 2.", tiempoDisponible: "1 hora 15 minutos", butacas: 8},
@@ -174,67 +190,65 @@
             const peliculaSeleccionada = seleccionPeliculaSelect.value;
             const pelicula = peliculas[peliculaSeleccionada];
             document.getElementById('titulo-pelicula').textContent = pelicula.titulo;
-            document.getElementById('duracion').textContent = pelicula.duracion;
-            document.getElementById('genero').textContent = pelicula.genero;
-            document.getElementById('descripcion').textContent = pelicula.descripcion;
-            document.getElementById('tiempoDisponible').textContent = "El tiempo que tenemos: " + pelicula.tiempoDisponible;
-
-            // Mostrar cantidad de butacas dependiendo de la película
-            crearButacas(pelicula.butacas);
-            seccionButacas.style.display = 'block';
-            seccionCantidadButacas.style.display = 'none'; // Ocultar la sección de cantidad de butacas
-        });
-
-        // Función para crear butacas
-        function crearButacas(cantidad) {
-            contenedorButacas.innerHTML = ''; // Limpiar cualquier botón previo
-            for (let i = 1; i <= cantidad; i++) {
-                const botonButaca = document.createElement('button');
-                botonButaca.classList.add('butaca');
-                botonButaca.textContent = `Butaca ${i}`;
-                botonButaca.addEventListener('click', () => {
-                    botonButaca.classList.toggle('selected');
-                    actualizarConfirmarButacasBtn();
-                });
-                contenedorButacas.appendChild(botonButaca);
-            }
-
-            confirmarButacasBtn.style.display = 'block';
+            document.getElementById('duracion')
+                // Continuación de la función crearButacas
+    crearButacas(cantidad) {
+        contenedorButacas.innerHTML = ''; // Limpiar cualquier butaca previa
+        for (let i = 1; i <= cantidad; i++) {
+            const botonButaca = document.createElement('button');
+            botonButaca.classList.add('butaca');
+            botonButaca.textContent = `Butaca ${i}`;
+            botonButaca.addEventListener('click', () => {
+                botonButaca.classList.toggle('selected');
+                actualizarConfirmarButacasBtn();
+            });
+            contenedorButacas.appendChild(botonButaca);
         }
+        confirmarButacasBtn.style.display = 'block';
+    }
 
-        function actualizarConfirmarButacasBtn() {
-            const seleccionadas = document.querySelectorAll('.butaca.selected');
-            confirmarButacasBtn.disabled = seleccionadas.length === 0;
+    // Continuación de la lógica para actualizar y confirmar butacas seleccionadas
+    function actualizarConfirmarButacasBtn() {
+        const seleccionadas = document.querySelectorAll('.butaca.selected');
+        confirmarButacasBtn.disabled = seleccionadas.length === 0;
+    }
+
+    confirmarButacasBtn.addEventListener('click', () => {
+        seccionMetodoPago.style.display = 'block';
+    });
+
+    confirmarMetodoBtn.addEventListener('click', () => {
+        seccionDatosTarjeta.style.display = 'block';
+    });
+
+    confirmarPagoBtn.addEventListener('click', () => {
+        alert("Pago confirmado. ¡Gracias por tu compra!");
+        // Aquí puedes añadir código para enviar los datos a tu servidor
+    });
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        const nombreCliente = document.getElementById('nombre_cliente').value;
+        const pelicula = seleccionPeliculaSelect.options[seleccionPeliculaSelect.selectedIndex].text;
+        const cantidad = cantidadButacasInput.value;
+        const total = calcularTotal(cantidad, tipoEntradaSelect.value);
+
+        document.getElementById('pelicula').value = pelicula;
+        document.getElementById('cantidad').value = cantidad;
+        document.getElementById('total').value = total;
+    });
+
+    // Función para calcular el total basado en la cantidad y el tipo de entrada
+    function calcularTotal(cantidad, tipoEntrada) {
+        let precio = 0;
+        if (tipoEntrada === 'menor') {
+            precio = 30;
+        } else if (tipoEntrada === 'jubilado') {
+            precio = 50;
+        } else if (tipoEntrada === 'mayor') {
+            precio = 100;
         }
-
-        confirmarButacasBtn.addEventListener('click', () => {
-            seccionMetodoPago.style.display = 'block';
-        });
-
-        confirmarMetodoBtn.addEventListener('click', () => {
-            seccionDatosTarjeta.style.display = 'block';
-        });
-
-        confirmarPagoBtn.addEventListener('click', () => {
-            alert("Pago confirmado. ¡Gracias por tu compra!");
-        });
+        return cantidad * precio;
+    }
     </script>
-        <h2>Formulario de Compra</h2>
-    <form action="eleccion_butacas.php" method="POST">
-        <label for="nombre_cliente">Nombre:</label>
-        <input type="text" id="nombre_cliente" name="nombre_cliente" required><br>
-
-        <label for="pelicula">Película:</label>
-        <input type="text" id="pelicula" name="pelicula" value="Nombre de la Película" required><br> <!-- Podrías agregar un valor dinámico dependiendo de la selección del usuario -->
-
-        <label for="cantidad">Cantidad:</label>
-        <input type="number" id="cantidad" name="cantidad" required><br>
-
-        <label for="total">Total:</label>
-        <input type="text" id="total" name="total" required><br>
-
-        <input type="submit" value="Comprar">
-    </form>
-
 </body>
 </html>
